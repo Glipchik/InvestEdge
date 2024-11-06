@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+option csharp_namespace = "PortfolioClient";
+
+package portfolio;
+
+// The greeting service definition.
+service PortfolioExternal {
+  // Sends a greeting
+  rpc UpdateAssetsPrices (UpdateAssetsPricesRequestModel) returns (google.protobuf.Empty);
+}
+
+// The request message containing the user's name.
+message UpdateAssetsPricesRequestModel {
+  repeated FetchedAssetModel Assets = 1;
+}
+
+message FetchedAssetModel {
+  string Id = 1;
+  string Price = 2;
+}

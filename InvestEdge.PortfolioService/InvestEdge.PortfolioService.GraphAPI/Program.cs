@@ -1,22 +1,23 @@
-using HotChocolate.AspNetCore.Playground;
 using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
 using InvestEdge.PortfolioService.GraphAPI.Contexts;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using InvestEdge.PortfolioService.GraphAPI.Enums;
 using InvestEdge.PortfolioService.GraphAPI.GraphQL;
+using InvestEdge.PortfolioService.GraphAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services
     .AddGraphQLServer()
-    .AddType<InvestEdge.PortfolioService.GraphAPI.GraphQL.AssetType>()
+    .AddType<AssetType>()
     .AddType<HoldingType>()
     .AddType<UserType>()
-    .AddQueryType<InvestEdge.PortfolioService.GraphAPI.GraphQL.Query>();
+    .AddQueryType<Query>();
 
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
@@ -33,6 +34,7 @@ if (env.IsDevelopment())
 }
 
 app.MapGraphQL("/api");
+app.MapGrpcService<PortfolioGrpcService>();
 
 app.MapGet("/", () => "Hello World!");
 
