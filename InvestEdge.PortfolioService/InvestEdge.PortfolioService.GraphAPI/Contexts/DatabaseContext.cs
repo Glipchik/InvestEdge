@@ -7,8 +7,9 @@ public class DatabaseContext : DbContext
 {
     public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
     {
-        Database.EnsureDeleted();
-        Database.EnsureCreated();        
+        //Database.Migrate();
+        //Database.EnsureDeleted();
+        Database.EnsureCreated();
     }
 
     public DbSet<User> Users { get; set; }
@@ -38,6 +39,30 @@ public class DatabaseContext : DbContext
                 FirstName = "Tom",
                 LastName = "Hardy",
                 Email = "tom.hardy@gmail.com"
+            });
+
+        modelBuilder.Entity<Asset>()
+            .HasData(new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Bitcoin",
+                Description = "First crypto",
+                Type = Enums.AssetType.Crypto,
+                Price = 75000
+            }, new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Ethereum",
+                Description = "Second crypto and first well developed blockchain infrastructure",
+                Type = Enums.AssetType.Crypto,
+                Price = 5000
+            }, new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Dogecoin",
+                Description = "Just a memecoin pumped by Elon Musk",
+                Type = Enums.AssetType.Crypto,
+                Price = 10
             });
 
         // Configure one-to-one relationship between User and Holding using UserId as foreign key
